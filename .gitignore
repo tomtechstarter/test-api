@@ -1,0 +1,3 @@
+node_modules/
+# Normalerweise sollte diese Datei mit ins Repo
+package-lock.json
