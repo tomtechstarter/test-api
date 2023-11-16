@@ -3,8 +3,12 @@ const app = express()
 const port = 3000
 const AWS = require('aws-sdk');
 
+AWS.config.update({ region: 'eu-central-1' })
 
-const docClient = new AWS.DynamoDB.DocumentClient();
+
+const docClient = new AWS.DynamoDB.DocumentClient({ region: 'eu-central-1' });
+
+
 
 
 app.put('/newuser', (req, res) => {
@@ -34,11 +38,11 @@ app.put('/newuser', (req, res) => {
 })
 
 app.get('/profile', (req, res) => {
-    const userId = req.query?.id
+    const userId = req.query.id
     docClient.get({
         TableName: 'test',
         Key: {
-            'id': { N: String(userId) }
+            'id': String(userId)
         }
     }, (err, data) => {
         if (err) {
@@ -46,7 +50,7 @@ app.get('/profile', (req, res) => {
             res.send('Error Hello world')
         } else {
             console.log(data);
-            res.send('Hello World!')
+            res.json(data)
         }
     });
 })
