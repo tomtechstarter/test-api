@@ -4,6 +4,10 @@ const port = 3000
 const AWS = require('aws-sdk');
 const winston = require('winston')
 const WinstonCloudWatch = require('winston-cloudwatch');
+const cors = require('cors')
+
+// Use for development
+app.use(cors())
 
 // Read env variables
 const { AWS_REGION, LOG_GROUP, LOG_STREAM, DYNAMODB_TABLE } = process.env
@@ -31,48 +35,56 @@ app.use((req, res, next) => {
     next()
 })
 
+
+
 // Initialize DB Client
 const docClient = new AWS.DynamoDB.DocumentClient({ region: AWS_REGION });
 
 
 // GET Requests
-app.get('/profile', (req, res) => {
-    const userId = req.query.id
-    docClient.get({
-        TableName: DYNAMODB_TABLE,
-        Key: {
-            'id': String(userId)
+app.get('/profile', async (req, res) => {
+
+    try {
+        const userId = req.query?.id
+        const input = {
+            TableName: DYNAMODB_TABLE,
+            Key: {
+                'id': String(userId)
+            }
         }
-    }, (err, data) => {
-        if (err) {
-            logger.error(err);
-            res.send(`Failed to fetch data with id ${userId}`)
-        } else {
-            res.json(data)
-        }
-    });
+        const data = await docClient.get(input).promise()
+        res.json(data)
+    } catch (e) {
+        logger.error('Failed to get Profile', e)
+        res.send(e)
+    }
+
 })
 
-app.get('/shopping', (req, res) => {
-    res.json({ user: { name: "Max" } })
+app.get('/test', (req, res) => {
+    try {
+        res.json({ user: { name: "Max" } })
+    } catch (e) {
+        console.log(e)
+    }
 })
 
 // PUT
-app.put('/newuser', (req, res) => {
-    const body = JSON.parse(req.body)
+app.put('/newuser', async (req, res) => {
+    try {
+        const body = JSON.parse(req.body)
 
-    docClient.put({
-        TableName: DYNAMODB_TABLE,
-        Item: body
-    }, (err, data) => {
-        if (err) {
-            logger.error(err)
-            res.send('Failed to add Item')
-        } else {
-            res.json(body)
+        const input = {
+            TableName: DYNAMODB_TABLE,
+            Item: body
         }
-    });
 
+        const data = await docClient.put(input).promise();
+        res.json(data)
+    } catch (e) {
+        logger.error(e)
+        res.send(e)
+    }
 })
 
 app.listen(port, () => {

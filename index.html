@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Request Example</title>
+</head>
+<body>
+    <h1>API Request Example</h1>
+
+    <form id="userForm">
+        <label for="userId">User ID:</label>
+        <input type="text" id="userId" name="userId" required>
+        <br>
+        <label for="userName">User Name:</label>
+        <input type="text" id="userName" name="userName" required>
+        <br>
+        <label for="userEmail">User Email:</label>
+        <input type="email" id="userEmail" name="userEmail" required>
+        <br>
+        <button type="button" onclick="sendUserData()">Submit</button>
+    </form>
+
+    <div id="result"></div>
+
+    <h2>Get User by ID</h2>
+    <form id="getUserForm">
+        <label for="getUserId">User ID:</label>
+        <input type="text" id="getUserId" name="getUserId" required>
+        <br>
+        <button type="button" onclick="getUserById()">Get User</button>
+    </form>
+
+    <div id="getUserResult"></div>
+
+    <script>
+        async function sendUserData() {
+            const userId = document.getElementById('userId').value;
+            const userName = document.getElementById('userName').value;
+            const userEmail = document.getElementById('userEmail').value;
+
+            const userData = {
+                id: userId,
+                userName,
+                userEmail,
+            };
+
+            try {
+                const response = await fetch('http://localhost:3000/newuser', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(userData),
+                });
+
+                const result = await response.json();
+
+                document.getElementById('result').innerText = `API Response: ${JSON.stringify(result)}`;
+
+                // Clear input fields
+                document.getElementById('userId').value = '';
+                document.getElementById('userName').value = '';
+                document.getElementById('userEmail').value = '';
+            } catch (error) {
+                console.error('Error sending data:', error);
+            }
+        }
+
+        async function getUserById() {
+            const getUserId = document.getElementById('getUserId').value;
+
+            try {
+                const response = await fetch(`http://localhost:3000/profile?id=${userId}`);
+                const result = await response.json();
+
+                document.getElementById('getUserResult').innerText = `User Details: ${JSON.stringify(result)}`;
+            } catch (error) {
+                console.error('Error getting user data:', error);
+            }
+        }
+    </script>
+</body>
+</html>
