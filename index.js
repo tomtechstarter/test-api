@@ -1,10 +1,11 @@
 const express = require('express')
 const app = express()
-const port = 3000
 const AWS = require('aws-sdk');
 const winston = require('winston')
 const WinstonCloudWatch = require('winston-cloudwatch');
 const cors = require('cors')
+
+const port = 5000
 
 // Use for development
 app.use(cors())
