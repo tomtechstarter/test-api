@@ -6,7 +6,7 @@
    --> Öffentliche IP zuweisen
 2. Über SSH auf EC2 Instanz verbinden 
 3. Node und Hilfspakete installieren:
-    --> 3.0 sudo apt update
+    --> 3.0 `sudo apt update`
     --> 3.1 `sudo apt install curl`
     --> 3.2 Node version Manager installieren: `curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash `
     --> Bash neu laden: `source ~/.profile`
