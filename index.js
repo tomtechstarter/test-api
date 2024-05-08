@@ -102,7 +102,7 @@ app.get('/profile', async (req, res) => {
 
 app.get('/test', (req, res) => {
     try {
-        res.json({ user: { name: "Max" } })
+        res.json({ user: { name: "Moritz" } })
     } catch (e) {
         console.log(e)
     }
